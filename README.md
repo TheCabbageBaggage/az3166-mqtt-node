@@ -188,6 +188,21 @@ sudo openocd -f interface/stlink.cfg -c "transport select hla_swd" \
 
 `./flash.sh` wraps the compile and this command (`pkexec` instead of `sudo`).
 
+### Serial console without sudo
+
+`udev/99-az3166.rules` gives the virtual COM port a stable `/dev/az3166` name in
+group `dialout`, so monitoring does not need root:
+
+```bash
+sudo cp udev/99-az3166.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules && sudo udevadm trigger --subsystem-match=tty
+usermod -aG dialout "$USER"                       # then log in again
+stty -F /dev/az3166 115200 raw -echo && cat /dev/az3166
+```
+
+The board logs every MQTT connect, publish failure and reconnect reason at
+115200 baud — the fastest way to see what it is doing.
+
 ### Keep a way back
 
 Dump the factory image before the first flash, restore it the same way:

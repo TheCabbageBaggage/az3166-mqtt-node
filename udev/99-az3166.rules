@@ -1,0 +1,12 @@
+# MXChip AZ3166 IoT DevKit — ST-Link/V2.1 (0483:374b)
+#
+# Optional convenience: gives the virtual COM port a stable name and lets the
+# dialout group (add yourself: usermod -aG dialout $USER) monitor it without
+# sudo. The ST-Link itself stays root-only for openocd, which is what you want
+# for flashing.
+#
+#   sudo cp udev/99-az3166.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload-rules && sudo udevadm trigger --subsystem-match=tty
+#   stty -F /dev/az3166 115200 raw -echo && cat /dev/az3166
+
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", SYMLINK+="az3166", GROUP="dialout", MODE="0660"
