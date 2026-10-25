@@ -1,0 +1,14 @@
+// Copy to net_config.h and fill in your own values.
+// net_config.h is git-ignored and should be chmod 600 — it holds Wi-Fi and
+// MQTT credentials in plain text (they end up in the firmware image).
+#pragma once
+
+#define WIFI_SSID "your-2.4ghz-ssid"
+#define WIFI_PASS "your-wifi-passphrase"
+
+#define MQTT_HOST "192.168.1.10"   // broker IP, no hostname: no DNS lookup here
+#define MQTT_PORT 1883
+#define MQTT_USER "mqtt-user"
+#define MQTT_PASS "mqtt-password"
+#define MQTT_CLIENT_ID "az3166-devkit"
+#define MQTT_BASE "az3166"         // state: <base>/state, availability: <base>/availability

@@ -1,0 +1,8 @@
+# Credentials — never commit this file. Copy net_config.h.example instead.
+net_config.h
+
+# Build output
+build/
+*.bin
+*.elf
+*.map
