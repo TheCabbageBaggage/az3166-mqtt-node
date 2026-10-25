@@ -6,3 +6,6 @@ build/
 *.bin
 *.elf
 *.map
+
+# per-sketch build output
+selftest/build/

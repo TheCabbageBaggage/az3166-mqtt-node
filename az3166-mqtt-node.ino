@@ -27,55 +27,7 @@ static unsigned long lastState = 0;
 static unsigned long lastTry = 0;
 static char jb[1000];
 
-/* ------------------------------------------------------------------ */
-/* newlib compatibility: the prebuilt SDK archive was built against    */
-/* newlib 2.4 while the Arduino 4.8.3 toolchain ships newlib 2.1       */
-/* ------------------------------------------------------------------ */
-extern "C" {
-const char *__locale_ctype_ptr(void) { return __ctype_ptr__; }
-
-char *itoa(int value, char *str, int base)
-{
-    char *p = str;
-    char tmp[34];
-    int i = 0;
-    unsigned int v;
-    bool neg = false;
-    if (base == 10 && value < 0) { neg = true; v = (unsigned int)(-value); } else v = (unsigned int)value;
-    do {
-        int d = v % base;
-        tmp[i++] = (char)(d < 10 ? '0' + d : 'a' + d - 10);
-        v /= base;
-    } while (v);
-    if (neg) tmp[i++] = '-';
-    while (i) *p++ = tmp[--i];
-    *p = '\0';
-    return str;
-}
-
-char *utoa(unsigned int value, char *str, int base)
-{
-    char *p = str;
-    char tmp[34];
-    int i = 0;
-    do {
-        int d = value % base;
-        tmp[i++] = (char)(d < 10 ? '0' + d : 'a' + d - 10);
-        value /= base;
-    } while (value);
-    while (i) *p++ = tmp[--i];
-    *p = '\0';
-    return str;
-}
-
-/* the Arduino core calls these through C++ (mangled) declarations, the
-   prebuilt SDK archive calls them as plain C: provide both symbols */
-char *itoa_cxx(int, char *, int) __asm__("_Z4itoaiPci");
-char *itoa_cxx(int value, char *str, int base) { return itoa(value, str, base); }
-
-char *utoa_cxx(unsigned int, char *, int) __asm__("_Z4utoajPci");
-char *utoa_cxx(unsigned int value, char *str, int base) { return utoa(value, str, base); }
-}
+#include "newlib_shim.h"   /* __locale_ctype_ptr + itoa/utoa for the SDK archives */
 
 /* ------------------------------------------------------------------ */
 /* minimal MQTT 3.1.1 client (QoS0 publish, retained flag, LWT)        */
